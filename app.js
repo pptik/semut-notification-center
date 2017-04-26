@@ -1,8 +1,27 @@
 var mongo = require('./database/mongo');
+var cluster = require('cluster');
 
 
-mongo.connect().then(function (database) {
+if (cluster.isMaster) {
 
-}).catch(function (err) {
-   console.log(err);
-});
+    var cpuCount = require('os').cpus().length;
+
+    for (var i = 0; i < cpuCount; i += 1) {
+        cluster.fork();
+    }
+
+    cluster.on('exit', function (worker) {
+        console.log('Worker %d died :(', worker.id);
+        cluster.fork();
+
+    });
+
+}else {
+    mongo.connect().then(function (database) {
+        exports.database = database;
+    }).catch(function (err) {
+        console.log(err);
+    });
+
+    console.log('Worker %d running!', cluster.worker.id);
+}
