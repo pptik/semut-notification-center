@@ -35,7 +35,8 @@ function connectToBroker() {
                     exports.chnannel = ch;
                     mongo.connect().then(function (database) {
                         exports.database = database;
-
+                        //listen incoming msg
+                        require('./services/notification_listener').consume();
                     }).catch(function (err) {
                         console.log(err);
                     });

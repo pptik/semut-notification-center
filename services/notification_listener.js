@@ -1,7 +1,7 @@
-var db = require('../app').database;
 var channel = require('../app').chnannel;
 var setup = require('../setup');
 var states = setup.broker_setup.states;
+var emergencyNotifier = require('../notifiers/emergency')
 
 const exchangeName = setup.broker_setup.exchange_name;
 const queueName = setup.broker_setup.queue_name;
@@ -26,7 +26,10 @@ function consume () {
 function checkState(type, msg) {
     switch (type){
         case states.emergency_notification:
-
+            console.log('--------------------------------------------');
+            console.log('Emergency Notification');
+            console.log('--------------------------------------------');
+            emergencyNotifier.sendToNotifier(msg);
             break;
     }
 }
