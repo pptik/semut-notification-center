@@ -1,12 +1,12 @@
 var database = require('../app').database;
-var userModels = database.collection;
+var userModels = database.collection('tb_user');
 
 
 function getNotifier() {
     return new Promise(function (resolve, reject) {
         var query = {
             ID_role : 5,
-            PushID: { $not: 'no id' }
+            PushID: { $ne: 'no id' }
         };
         userModels.find(query).toArray(function (err, item) {
            if(err) reject(err);
@@ -23,6 +23,8 @@ function sendToNotifier(msg) {
        if(users.length > 0){
 
        }
+    }).catch(function (err) {
+        console.log(err);
     });
 }
 
